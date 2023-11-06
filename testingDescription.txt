@@ -166,3 +166,17 @@ _PointerTester_2 failed: False != True
 ============================== 2 passed in 0.01s ==============================
 
 Process finished with exit code 0
+
+
+А это тест на определение расстояния от точки до плоскости
+============================= test session starts =============================
+collecting ... collected 2 items
+
+testPresentator.py::PrintingTest::test_say_hello PASSED                  [ 50%]
+testPresentator.py::PlaneAndPointTest::test_DistanceTst PASSED           [100%]вызов __new__ для <class 'pointMaster.Point3D'>
+вызов __new__ для <class 'pointMaster.Point3D'>
+18.175
+_DistanceTst is OK
+
+
+

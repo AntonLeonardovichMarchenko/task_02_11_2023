@@ -1,0 +1,168 @@
+Про тестирование.
+Идея состоит в том, что каждую строку кода, которая пишется,
+чтобы избежать неожиданностей, следует тестировать. Это также помогает в том смысле,
+что вам не нужно останавливать рабочий продукт для тестирования кода, но если
+тестирование настроено, вы можно запускать тесты, и если возникнут какие-либо ошибки,
+то будт понятно, какая часть кода не работает.
+Покрытие - это инструмент, который важен при тестировании. Он генерирует отчет и дает процент кода,
+который был покрыт тестированием.
+Покрытие можно использовать вместе с unittest, pytest и ещё с некоторыми средствами тестирования.
+
+def sayHello(name = None):
+    if name == '':
+        print('hello, Stranger!')
+    else:
+        print(f'hello, {name}')
+
+def DoIt():
+    sayHello(input('>>> what is your name? '))
+
+
+if __name__ == '__main__':
+    DoIt()
+
+
+Как применять покрытие. Используя unittest
+В файле testPresentator.py применяется unittest, который проверяет функцию sayHello,
+и проверяет, что она выводит...
+
+from unittest import TestCase
+from unittest.mock import patch
+from io import StringIO
+from goTester import sayHello
+
+
+class PrintingTest(TestCase):
+    def say_hello_test(self):
+        name = 'test'
+        expected_output = f'hello {name}\n'
+
+        with patch('sys.stdout', new = StringIO()) as fake_out:
+            sayHello(name)
+            self.assertEqual(fake_out.getvalue(), expected_output)
+
+def DoIt():
+    pt = PrintingTest()
+    pt.say_hello_test()
+
+if __name__ == '__main__':
+    DoIt()
+
+... И посмотреть, как можно использовать покрытие для создания отчета о том,
+сколько кода покрыто тестированием в коде.
+
+Установка Coverage
+Как и любую другую библиотеку Python, Coverage можно установить с помощью:
+
+pip install coverage
+
+запуск:
+...> coverage run -m unittest testPresentator.py
+!!! так дело НЕ пойдёт!
+сообщение об ошибке:
+coverage : Имя "coverage" не распознано как имя командлета, функции, файла сценария или выполняемой программы. Проверьте п
+равильность написания имени, а также наличие и правильность пути, после чего повторите попытку.
+
+Вопрос: ЧТО НЕ ТАК??? или кто пишет сам не тестирует???
+
+Правильная строка запуска приложений из командной строки выглядят вот так:
+
+...> python testPresentator.py
+...> python -m testPresentator
+
+далее, ДЕЙСТВИТЕЛЬНО УМНЫЕ люди, говорят следующее:
+
+To generate a coverage report, you need to carry out two steps:
+
+First, run the coverage module to generate the coverage data:
+
+...> python -m coverage run -m unittest
+
+Second, turn the coverage data into a report:
+
+...> python -m coverage report
+
+Name                 Stmts   Miss  Cover
+----------------------------------------
+goTester.py              8      3    62%
+testPresentator.py      16      0   100%
+----------------------------------------
+TOTAL                   24      3    88%
+
+Всего ТРИ шага!
+
+выполнить приложение,
+запустить coverage модуль для сбора the coverage data,
+запустить coverage модуль для формирования отчёта о тестировании.
+
+И получили результат покрытия.
+
+===================================================================================================
+
+Для более масштабных действий по тестированию используют running tests.
+Это специальные приложения для запуска тестов, проверки вывода и предоставления инструментов
+для отладки и диагностики тестов и приложений.
+
+Выбор Test Runner
+Unittest
+Unittest содержит как структуру тестирования Python, так и test runners.
+У Unittest есть несколько требований:
+
+= Нужно помещать свои тесты в классы как методы.
+= Нужно использовать ряд специальных методов утверждения в unittest − TestCase вместо assert.
+
+Для преобразования в unittest нужно :
+
+= Импортировать unittest из стандартной библиотеки.
+= Создать соответствующий класс (TestPoint3D), который наследуется от класса TestCase.
+= Преобразовать тестовые функции (если они уже есть) в методы TestPoint3D путем добавления
+  self в качестве первого аргумента тестовыхх функций.
+= Изменить утверждение на использование метода self.assertEqual() в классе TestCase.
+= Изменить точку входа в командной строке для вызова unittest.main().
+
+Принципы тестирования
+= Работа теста не должна зависеть от результатов работы других тестов.
+= Тест должен использовать данные, специально для него подготовленные, и никакие другие.
+= Тест не должен требовать ввода от пользователя
+= Тесты не должны перекрывать друг друга (не надо писать одинаковые тесты).
+  Можно писать частично перекрывающие тесты.
+= !!! Нашел баг -> напиши тест !!!
+= Тесты надо поддерживать в рабочем состоянии
+= Модульные тесты не должны проверять производительность сущности (класса, функции)
+= Тесты должны проверять не только то, что сущность работает корректно на корректных данных,
+  но и то что ведет себя адекватно при некорректных данных.
+= Тесты надо запускать регулярно
+
+
+результаты тестирования
+==========================================================================
+
+C:\Users\anton\AppData\Local\Microsoft\WindowsApps\python3.9.exe "C:/Program Files/JetBrains/PyCharm Community Edition 2022.3/plugins/python-ce/helpers/pycharm/_jb_pytest_runner.py" --path C:\PythonDrom\Tests_2022\test_02_11_2023\pointMasterTst.py 
+Testing started at 23:02 ...
+Launching pytest with arguments C:\PythonDrom\Tests_2022\test_02_11_2023\pointMasterTst.py --no-header --no-summary -q in C:\PythonDrom\Tests_2022\test_02_11_2023
+
+============================= test session starts =============================
+collecting ... collected 2 items
+
+pointMasterTst.py::PointTest3D::test_fromString PASSED                   [ 50%]вызов __new__ для <class 'pointMaster.Point3D'>
+вызов __new__ для <class 'pointMaster.Point3D'>
+test_fromString is OK
+
+
+pointMasterTst.py::PointTest3D::test_mainTest PASSED                     [100%]вызов __new__ для <class 'pointMaster.Point3D'>
+вызов __new__ для <class 'pointMaster.Point3D'>
+вызов __new__ для <class 'pointMaster.Point3D'>
+вызов __new__ для <class 'pointMaster.Point3D'>
+=========== _PointerTester_0 failed ==========================
+
+вызов __new__ для <class 'pointMaster.Point3D'>
+_PointerTester_1 is OK
+
+вызов __new__ для <class 'pointMaster.Point3D'>
+_PointerTester_2 failed: False != True
+
+
+
+============================== 2 passed in 0.01s ==============================
+
+Process finished with exit code 0

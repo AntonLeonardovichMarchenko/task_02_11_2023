@@ -1,0 +1,54 @@
+import math
+
+from unittest import TestCase
+from unittest.mock import patch
+from io import StringIO
+from goTester import sayHello
+
+
+from pointMaster import Point3D
+
+
+
+class PrintingTest(TestCase):
+    def test_say_hello(self):
+        name = 'test'
+        # expected_output = f'hello {name}\n'  # тест провален
+        expected_output = f'hello, {name}\n'   # а это корректный тест
+
+        with patch('sys.stdout', new = StringIO()) as fake_out:
+            sayHello(name)
+            self.assertEqual(fake_out.getvalue(), expected_output)
+
+
+class PlaneAndPointTest(TestCase):
+    def test_DistanceTst(self):
+        point = Point3D(6,9,15)
+        plane = (Point3D(25, 17, 53), 11)
+
+        D = abs(plane[0]['x'] * point['x'] +
+                plane[0]['y'] * point['y'] +
+                plane[0]['z'] * point['z'] +
+                plane[1]) / math.sqrt(plane[0]['x'] * plane[0]['x'] +
+                                      plane[0]['y'] * plane[0]['y'] +
+                                      plane[0]['z'] * plane[0]['z'])
+
+        D = round(D, 3)
+        print(D)
+
+        self.assertEqual(D, 18.175)
+
+
+def DoIt():
+    pt = PrintingTest()
+    pt.test_say_hello()
+
+    ppt = PlaneAndPointTest()
+    ppt.test_DistanceTst()
+
+
+
+
+# Это условие блокирует вызов функции DoIt() при загрузке модуля
+if __name__ == '__main__':
+    DoIt()

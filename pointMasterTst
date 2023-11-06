@@ -1,0 +1,61 @@
+"""
+тестирование средствами unittest. Отдельно выбранные фрагменты класса Point3D. Главное -
+объявление класса с методами под названием test... .
+Все методы в классе-наследнике TestCase под названием test...
+"""
+
+import unittest
+from unittest import TestCase
+from pointMaster import Point3D
+
+class PointTest3D(TestCase):
+
+    def test_mainTest(self):
+        pointTst = Point3D(3, 3, 3)
+        # тестирование оператора + для объектов класса Point3D
+        self._test_PointerTester_0(pointTst)
+        # тестирование метода доступа к координате точки по её
+        # строковому обозначению (по имени координаты)
+        self._test_PointerTester_1(pointTst)
+        # тестирование оператора сравнения для объектов класса Point3D
+        self._test_PointerTester_2(pointTst)
+
+    def _test_PointerTester_0(self, p3d):
+        pointA = Point3D(1, 1, 1)  #  при таких значениях координат тест
+                                   # будет пройден (кто бы сомневался)
+        pointB = Point3D(2, 2, 2)
+        # pointA = Point3D(1, 1, 1)  # а при таких нет!
+        # pointB = Point3D(2, 2, 2)
+        pointSum = pointA + pointB
+        try:
+            self.assertEqual(pointSum, p3d)
+        except:
+            print('=========== _PointerTester_0 failed ==========================')
+
+    def _test_PointerTester_1(self, p3d):
+        pointTst = Point3D(0, -1, 3)
+        # тестирование метода доступа к координате точки по её строковому обозначению
+        # (по имени координаты)
+        self.assertEqual(pointTst['z'], p3d['z'])
+
+    # тестирование оператора сравнения для объектов класса Point3D
+    def _test_PointerTester_2(self, p3d):
+        # объект pointTst собран методом класса, а не конструктором.
+        pointTst = Point3D.fromString('1,2,3')
+        try:
+            self.assertEqual((pointTst==p3d), True)
+        except Exception as ex:
+            print(f'_PointerTester_2 failed: {ex}')
+
+    def test_fromString(self):
+        pointFromString = Point3D.fromString('1,2,3')
+        pointTst = Point3D(1,2,3)
+        self.assertEqual(pointTst,pointFromString)
+
+
+def DoIt():
+    unittest.main()     # с чистого листа запуск метода unittest.main(), а main по
+                        # очереди запускает все доступные методы тестирования
+
+if __name__ == '__main__':
+    DoIt()

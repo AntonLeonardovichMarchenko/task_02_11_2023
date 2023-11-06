@@ -1,0 +1,20 @@
+import math
+from pointMaster import Point3D
+
+def DoIt(point, plane):
+    print(point)
+    print(plane[0], plane[1])
+
+    D = abs(plane[0]['x']*point['x'] +
+            plane[0]['y']*point['y'] +
+            plane[0]['z']*point['z'] +
+            plane[1]) / math.sqrt(plane[0]['x']*plane[0]['x'] +
+                                  plane[0]['y']*plane[0]['y'] +
+                                  plane[0]['z']*plane[0]['z'])
+
+    D = round(D,3)
+    print(D)
+
+DoIt(Point3D(6,9,15), (Point3D(25, 17, 53), 11) )
+     # точка
+                       # общее уравнение плоскости
